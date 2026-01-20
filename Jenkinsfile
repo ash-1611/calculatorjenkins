@@ -3,16 +3,24 @@ pipeline {
 
     stages {
 
-        stage('Verify Files') {
+        stage('Checkout Code') {
             steps {
-                sh 'ls -l'
+                checkout scm
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t calculator-app .'
+            }
+        }
+
+        stage('Run Docker Container') {
             steps {
                 sh '''
-                echo "Deploying Calculator App..."
+                docker stop calculator || true
+                docker rm calculator || true
+                docker run -d -p 8081:80 --name calculator calculator-app
                 '''
             }
         }
@@ -20,10 +28,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment successful!'
+            echo 'Calculator deployed successfully using Docker!'
         }
         failure {
-            echo 'Deployment failed!'
+            echo 'Docker deployment failed!'
         }
     }
 }
