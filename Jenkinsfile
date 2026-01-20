@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/ash-1611/calculatorjenkins.git'
-            }
-        }
-
         stage('Verify Files') {
             steps {
                 sh 'ls -l'
@@ -18,8 +12,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                echo "Deploying HTML Calculator App..."
-                cp -r * /var/www/html/
+                echo "Deploying Calculator App..."
                 '''
             }
         }
@@ -27,7 +20,7 @@ pipeline {
 
     post {
         success {
-            echo 'HTML Calculator App deployed successfully!'
+            echo 'Deployment successful!'
         }
         failure {
             echo 'Deployment failed!'
